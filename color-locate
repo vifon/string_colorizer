@@ -6,7 +6,7 @@ from sys import argv
 from hashlib import md5 as hashfunc
 
 colors = [ "\033[{1};{0}m".format(color, bold)
-           for bold in range(0,2)
+           for bold in [0,1]
            for color in range(31,38) ]
 colorreset = "\033[0m"
 
