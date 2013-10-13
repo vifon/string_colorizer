@@ -1,0 +1,30 @@
+#!/bin/zsh
+# -*- python -*-
+
+"""":
+locate "$@" | python3 $0
+exit $?
+""" and None
+
+import fileinput
+import os
+from hashlib import sha256 as hashfunc
+
+colors = [ "\033[{1};{0}m".format(color, bold)
+           for bold in range(0,2)
+           for color in range(31,38) ]
+colorreset = "\033[0m"
+
+def colorhash(string):
+    return colors[int(hashfunc(string.encode()).hexdigest(),
+                      base=16)
+                  % len(colors)]
+
+def main():
+    for line in fileinput.input():
+        path = line.rstrip(os.linesep).split(os.sep)
+        print(os.sep.join([ colorhash(component) + component + colorreset
+                            for component in path ]))
+
+if __name__ == "__main__":
+    main()
