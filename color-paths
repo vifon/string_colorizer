@@ -4,11 +4,21 @@
 import fileinput
 import os
 from sys import argv
-from hashlib import md5 as hashfunc
+import hashlib
 
 class string_colorizer(object):
-    def __init__(self, colors = None, reset = "\033[0m"):
+    def __init__(self,
+                 colors      = None,
+                 reset       = "\033[0m",
+                 hashfunc    = hashlib.md5,
+                 use_hashlib = True):
         self.reset = reset
+        if use_hashlib:
+            self.hashfunc = lambda x: int(hashfunc(x.encode()).hexdigest(),
+                                          base=16)
+        else:
+            self.hashfunc = hashfunc
+
         if colors == None:
             colors = [ "{1};{0}".format(color, bold)
                        for bold in [0,1]
@@ -17,9 +27,7 @@ class string_colorizer(object):
                         for color in colors ]
 
     def colorize(self, string):
-        return self.colors[int(hashfunc(string.encode()).hexdigest(),
-                               base=16)
-                           % len(self.colors)]
+        return self.colors[self.hashfunc(string) % len(self.colors)]
 
     def colorize_path(self, path):
         return os.sep.join([ self.colorize(component) + component + self.reset
