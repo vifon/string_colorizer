@@ -5,21 +5,30 @@ import os
 from sys import argv
 from hashlib import md5 as hashfunc
 
-colors = [ "\033[{1};{0}m".format(color, bold)
-           for bold in [0,1]
-           for color in range(31,38) ]
-colorreset = "\033[0m"
+class string_colorizer(object):
+    def __init__(self, colors = None, reset = "\033[0m"):
+        self.reset = reset
+        if colors == None:
+            colors = [ "{1};{0}".format(color, bold)
+                       for bold in [0,1]
+                       for color in range(31,38) ]
+        self.colors = [ "\033[{0}m".format(color)
+                        for color in colors ]
 
-def colorhash(string):
-    return colors[int(hashfunc(string.encode()).hexdigest(),
-                      base=16)
-                  % len(colors)]
+    def colorize(self, string):
+        return self.colors[int(hashfunc(string.encode()).hexdigest(),
+                               base=16)
+                           % len(self.colors)]
+
+    def colorize_path(self, path):
+        return os.sep.join([ self.colorize(component) + component + self.reset
+                             for component in path.split(os.sep) ])
 
 def main():
+    colorizer = string_colorizer()
     for line in fileinput.input():
-        path = line.rstrip(os.linesep).split(os.sep)
-        print(os.sep.join([ colorhash(component) + component + colorreset
-                            for component in path ]))
+        path = line.rstrip(os.linesep)
+        print(colorizer.colorize_path(path))
 
 if __name__ == "__main__":
     main()
