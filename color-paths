@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import subprocess
+import fileinput
 import os
 from sys import argv
 from hashlib import md5 as hashfunc
@@ -16,10 +16,8 @@ def colorhash(string):
                   % len(colors)]
 
 def main():
-    locate = subprocess.Popen(["locate"] + argv,
-                              stdout=subprocess.PIPE)
-    for line in locate.stdout:
-        path = line.decode().rstrip(os.linesep).split(os.sep)
+    for line in fileinput.input():
+        path = line.rstrip(os.linesep).split(os.sep)
         print(os.sep.join([ colorhash(component) + component + colorreset
                             for component in path ]))
 
