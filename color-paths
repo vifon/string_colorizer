@@ -46,13 +46,17 @@ class string_colorizer(object):
         self._colors = [ "\033[{0}m".format(color)
                          for color in colors ]
 
+    def choose_color(self, string):
+        """Chooses a color for the given string"""
+        return self.colors[self.hashfunc(string) % len(self.colors)]
+
     def colorize(self, string):
         """Colors the given string according to its hash"""
-        return self.colors[self.hashfunc(string) % len(self.colors)]
+        return self.choose_color(string) + string + self.reset
 
     def colorize_path(self, path):
         """Colors each path component to the appropriate color"""
-        return os.sep.join([ self.colorize(component) + component + self.reset
+        return os.sep.join([ self.colorize(component)
                              for component in path.split(os.sep) ])
 
 def main():
