@@ -1,13 +1,4 @@
-#!/usr/bin/env python3
-# -*- python -*-
-"""path colorizer
-
-Colors the path segments in each path given on stdin or in the file specified in the argument.
-"""
-
-import fileinput
 import os
-from sys import argv
 import hashlib
 
 class string_colorizer(object):
@@ -54,16 +45,4 @@ class string_colorizer(object):
         """Colors the given string according to its hash"""
         return self.choose_color(string) + string + self.reset
 
-    def colorize_path(self, path):
-        """Colors each path component to the appropriate color"""
-        return os.sep.join([ self.colorize(component)
-                             for component in path.split(os.sep) ])
-
-def main():
-    colorizer = string_colorizer()
-    for line in fileinput.input():
-        path = line.rstrip(os.linesep)
-        print(colorizer.colorize_path(path))
-
-if __name__ == "__main__":
-    main()
+__all__ = ['string_colorizer']
