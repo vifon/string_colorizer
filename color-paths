@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- python -*-
 #########################################################################
 # Copyright (C) 2013-2014  Wojciech Siewierski                          #
@@ -20,6 +20,8 @@
 
 Colors the path segments in each path given on stdin or in the file specified in the argument.
 """
+
+from __future__ import print_function
 
 import fileinput
 import os
