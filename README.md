@@ -15,6 +15,9 @@ DESCRIPTION
 Colors the path segments in each path given on stdin or in the file
 specified in the argument.
 
+Python 3 **STRONGLY** recommended. Works on Python 2 but crashes on
+non-ascii characters. Fixing it is in my todo.
+
 AUTHOR
 ======
 
