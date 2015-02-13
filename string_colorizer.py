@@ -18,6 +18,8 @@
 import os
 import hashlib
 
+__version__ = "1.0.1"
+
 class string_colorizer(object):
     @property
     def colors(self):
@@ -42,7 +44,7 @@ class string_colorizer(object):
         """
         self._reset = reset
         if use_hashlib:
-            self.hashfunc = lambda x: int(hashfunc(x.encode()).hexdigest(),
+            self.hashfunc = lambda x: int(hashfunc(x.encode('utf8')).hexdigest(),
                                           base=16)
         else:
             self.hashfunc = hashfunc
