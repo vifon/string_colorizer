@@ -1,7 +1,12 @@
-#!/usr/bin/env python3
-# -*- python -*-
+#!/usr/bin/env python
+"""path colorizer
+
+Colors the path segments in each path given on stdin or in the file
+specified in the argument.
+
+"""
 #########################################################################
-# Copyright (C) 2013-2014  Wojciech Siewierski                          #
+# Copyright (C) 2013-2015  Wojciech Siewierski                          #
 #                                                                       #
 # This program is free software: you can redistribute it and/or modify  #
 # it under the terms of the GNU General Public License as published by  #
@@ -16,30 +21,24 @@
 # You should have received a copy of the GNU General Public License     #
 # along with this program.  If not, see <http://www.gnu.org/licenses/>. #
 #########################################################################
-"""path colorizer
-
-Colors the path segments in each path given on stdin or in the file specified in the argument.
-"""
-
-from __future__ import print_function
 
 import fileinput
 import os
-from sys import argv
+import sys
 
-from string_colorizer import string_colorizer
+from string_colorizer import PathColorizer
 
-class path_colorizer(string_colorizer):
-    def colorize_path(self, path):
-        """Colors each path component to the appropriate color"""
-        return os.sep.join([ self.colorize(component)
-                             for component in path.split(os.sep) ])
 
 def main():
-    colorizer = path_colorizer()
+    colorizer = PathColorizer()
     for line in fileinput.input():
-        path = line.rstrip(os.linesep)
+        if sys.version_info < (3, 0):
+            utf_line = line.decode('utf-8')
+        else:
+            utf_line = line
+        path = utf_line.rstrip(os.linesep)
         print(colorizer.colorize_path(path))
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     main()

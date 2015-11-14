@@ -1,5 +1,7 @@
+"""Colorize strings according to a hashing function"""
+
 #########################################################################
-# Copyright (C) 2013-2014  Wojciech Siewierski                          #
+# Copyright (C) 2013-2015  Wojciech Siewierski                          #
 #                                                                       #
 # This program is free software: you can redistribute it and/or modify  #
 # it under the terms of the GNU General Public License as published by  #
@@ -18,50 +20,53 @@
 import os
 import hashlib
 
-__version__ = "1.0.1"
+__version__ = "1.1.0"
+__author__ = "Wojciech Siewierski"
+__email__ = "wojciech.siewierski+python@gmail.com"
+__license__ = "GPL3"
 
-class string_colorizer(object):
-    @property
-    def colors(self):
-        """array with the escape codes being used"""
-        return self._colors
-    @property
-    def reset(self):
-        """escape code used to reset the formatting"""
-        return self._reset
+__all__ = ['StringColorizer', 'PathColorizer']
 
-    def __init__(self,
-                 colors      = None,
-                 reset       = "\033[0m",
-                 hashfunc    = hashlib.md5,
-                 use_hashlib = True):
+
+class StringColorizer(object):
+    def __init__(
+            self,
+            colors      = None,
+            reset       = "\033[0m",
+            hashfunc    = hashlib.md5,
+            use_hashlib = True):
         """
         Arguments:
-        - `colors`: array of the used colors' numbers for the escape codes; default: range from 31 to 37 + bolds
+        - `colors`: list of the used colors' numbers for the escape codes; default: range from 31 to 37 + bolds
         - `reset`: escape code used to reset the formatting; default: "\\033[0m"
         - `hashfunc`: function used to map the string to the integer used to determine the color
         - `use_hashlib`: set to False if the hashfunc returns integer and does not need to be converted like the hashlib functions
+
         """
-        self._reset = reset
+        self.reset = reset
         if use_hashlib:
-            self.hashfunc = lambda x: int(hashfunc(x.encode('utf8')).hexdigest(),
-                                          base=16)
+            self.hashfunc = lambda x: int(hashfunc(x.encode('utf-8')).hexdigest(), base=16)
         else:
             self.hashfunc = hashfunc
 
-        if colors == None:
-            colors = [ "{1};{0}".format(color, bold)
-                       for bold in [0,1]
-                       for color in range(31,38) ]
-        self._colors = [ "\033[{0}m".format(color)
-                         for color in colors ]
+        if colors is None:
+            colors = ["{1};{0}".format(color, bold)
+                      for bold in [0, 1]
+                      for color in range(31, 38)]
+        self.colors = ["\033[{0}m".format(color)
+                       for color in colors]
 
     def choose_color(self, string):
-        """Chooses a color for the given string"""
+        """Return a coloring string for the given string"""
         return self.colors[self.hashfunc(string) % len(self.colors)]
 
     def colorize(self, string):
-        """Colors the given string according to its hash"""
+        """Color the given string according to its hash"""
         return self.choose_color(string) + string + self.reset
 
-__all__ = ['string_colorizer']
+
+class PathColorizer(StringColorizer):
+    def colorize_path(self, path):
+        """Colors each path component to the appropriate color"""
+        return os.sep.join([self.colorize(component)
+                            for component in path.split(os.sep)])
