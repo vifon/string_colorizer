@@ -1,32 +1,36 @@
-NAME
-====
+string_colorizer
+================
 
-color-paths - filepath segment colorizer
+Color strings according to a given hashing function.
+
+Supports coloring the path segments inside a string separately.
+
+INSTALLATION
+------------
+
+    pip install string_colorizer
+
+color-paths
+===========
+
+An example script using this library.
 
 SYNOPSIS
-========
+--------
 
     locate myfile | color-paths
     find . -name myfile | color-paths
 
 DESCRIPTION
-===========
+-----------
 
 Colors the path segments in each path given on stdin or in the file
 specified in the argument.
 
-Python 3 **STRONGLY** recommended. Works on Python 2 but crashes on
-non-ascii characters. Fixing it is in my todo.
-
-AUTHOR
-======
-
-Wojciech Siewierski < wojciech dot siewierski at gmail dot com >
-
 COPYRIGHT
-=========
+---------
 
-Copyright (C) 2013-2014  Wojciech Siewierski
+Copyright (C) 2013-2015  Wojciech Siewierski
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
